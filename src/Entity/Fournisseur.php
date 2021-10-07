@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FournisseurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,16 @@ class Fournisseur
      * @ORM\Column(type="string", length=255)
      */
     private $nomStation;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RemplacerGaz::class, mappedBy="fournisseur")
+     */
+    private $remplacerGazs;
+
+    public function __construct()
+    {
+        $this->remplacerGazs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -72,4 +84,35 @@ class Fournisseur
 
         return $this;
     }
+
+    /**
+     * @return Collection|RemplacerGaz[]
+     */
+    public function getRemplacerGazs(): Collection
+    {
+        return $this->remplacerGazs;
+    }
+
+    public function addRemplacerGaz(RemplacerGaz $remplacerGaz): self
+    {
+        if (!$this->remplacerGazs->contains($remplacerGaz)) {
+            $this->remplacerGazs[] = $remplacerGaz;
+            $remplacerGaz->setFournisseur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRemplacerGaz(RemplacerGaz $remplacerGaz): self
+    {
+        if ($this->remplacerGazs->removeElement($remplacerGaz)) {
+            // set the owning side to null (unless already changed)
+            if ($remplacerGaz->getFournisseur() === $this) {
+                $remplacerGaz->setFournisseur(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
