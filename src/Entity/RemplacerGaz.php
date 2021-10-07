@@ -7,10 +7,13 @@ use App\Repository\RemplacerGazRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=RemplacerGazRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *  normalizationContext={"groups"={"remplacerGaz_read"}}
+ * )
  */
 class RemplacerGaz
 {
@@ -18,33 +21,48 @@ class RemplacerGaz
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"remplacerGaz_read","gazs_read","fournisseurs_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"remplacerGaz_read","gazs_read","fournisseurs_read"})
      */
     private $Date;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"remplacerGaz_read","gazs_read","fournisseurs_read"})
      */
     private $quantite;
 
     /**
+     * Prix unitaire
      * @ORM\Column(type="integer")
+     * @Groups({"remplacerGaz_read","gazs_read","fournisseurs_read"})
      */
     private $prix;
 
     /**
-     * @ORM\ManyToOne(targetEntity=gaz::class, inversedBy="remplacerGazs")
+     * @ORM\ManyToOne(targetEntity=Gaz::class, inversedBy="remplacerGazs")
+     * @Groups({"remplacerGaz_read","fournisseurs_read"})
+     *
      */
     private $gaz;
 
     /**
-     * @ORM\ManyToOne(targetEntity=fournisseur::class, inversedBy="remplacerGazs")
+     * @ORM\ManyToOne(targetEntity=Fournisseur::class, inversedBy="remplacerGazs")
+     * @Groups({"remplacerGaz_read","gazs_read"})
+     * 
      */
     private $fournisseur;
+    
+    /**
+     * Prix total
+     * @Groups({"remplacerGaz_read","gazs_read","fournisseurs_read"})
+     */
+    private $prixTotal;
 
     public function __construct()
     {
@@ -115,4 +133,14 @@ class RemplacerGaz
 
         return $this;
     }
+
+    /**
+     * Get prix total
+     */ 
+    public function getPrixTotal()
+    {
+        $this->prixTotal = $this->getPrix() * $this->getQuantite();
+        return $this->prixTotal;
+    }
+
 }

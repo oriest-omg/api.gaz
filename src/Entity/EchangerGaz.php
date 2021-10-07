@@ -7,10 +7,13 @@ use App\Repository\EchangerGazRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=EchangerGazRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *  normalizationContext={"groups"={"echangerGaz_read"}}
+ * )
  */
 class EchangerGaz
 {
@@ -18,26 +21,31 @@ class EchangerGaz
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"echangerGaz_read","gazs_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"echangerGaz_read","gazs_read"})
      */
     private $Date;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"echangerGaz_read","gazs_read"})
      */
     private $quantite;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"echangerGaz_read","gazs_read"})
      */
     private $prix;
 
     /**
-     * @ORM\ManyToOne(targetEntity=gaz::class, inversedBy="echangerGazs")
+     * @ORM\ManyToOne(targetEntity=Gaz::class, inversedBy="echangerGazs")
+     * @Groups({"echangerGaz_read"})
      */
     private $gaz;
 

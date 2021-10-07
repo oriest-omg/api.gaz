@@ -7,10 +7,13 @@ use App\Repository\FournisseurRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=FournisseurRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *  normalizationContext={"groups"={"fournisseurs_read"}}
+ * )
  */
 class Fournisseur
 {
@@ -18,26 +21,31 @@ class Fournisseur
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"fournisseurs_read","remplacerGaz_read","gazs_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"fournisseurs_read","remplacerGaz_read","gazs_read"})
      */
     private $nomFournisseur;
 
     /**
      * @ORM\Column(type="integer", length=255)
+     * @Groups({"fournisseurs_read","remplacerGaz_read","gazs_read"})
      */
     private $numeroFournisseur;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"fournisseurs_read","remplacerGaz_read","gazs_read"})
      */
     private $nomStation;
 
     /**
      * @ORM\OneToMany(targetEntity=RemplacerGaz::class, mappedBy="fournisseur")
+     * @Groups({"fournisseurs_read"})
      */
     private $remplacerGazs;
 

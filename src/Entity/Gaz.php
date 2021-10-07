@@ -7,10 +7,13 @@ use App\Repository\GazRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=GazRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *  normalizationContext={"groups"={"gazs_read"}}
+ * )
  */
 class Gaz
 {
@@ -18,41 +21,49 @@ class Gaz
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"gazs_read","echangerGaz_read","remplacerGaz_read","fournisseurs_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"gazs_read","echangerGaz_read","remplacerGaz_read","fournisseurs_read"})
      */
     private $nomStationGaz;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"gazs_read","echangerGaz_read","remplacerGaz_read","fournisseurs_read"})
      */
     private $prix;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"gazs_read","echangerGaz_read","remplacerGaz_read","fournisseurs_read"})
      */
     private $quantite;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"gazs_read","echangerGaz_read","remplacerGaz_read","fournisseurs_read"})
      */
     private $type;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"gazs_read","echangerGaz_read","remplacerGaz_read","fournisseurs_read"})
      */
     private $etat;
 
     /**
      * @ORM\OneToMany(targetEntity=RemplacerGaz::class, mappedBy="gaz")
+     * @Groups({"gazs_read"})
      */
     private $remplacerGazs;
 
     /**
      * @ORM\OneToMany(targetEntity=EchangerGaz::class, mappedBy="gaz")
+     * @Groups({"gazs_read"})
      */
     private $echangerGazs;
 
